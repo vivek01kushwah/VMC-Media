@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 
-// Try to load full app, fallback to mobile version
+// Load single responsive app for all devices
 const loadApp = async () => {
   const rootElement = document.getElementById("root");
   if (!rootElement) {
@@ -9,25 +9,14 @@ const loadApp = async () => {
     return;
   }
 
-  // Check if this is a mobile device
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isSmallScreen = window.innerWidth < 768;
-  
-  if (isMobile || isSmallScreen) {
-    console.log("Mobile detected, using lightweight version");
-    const { default: MobileApp } = await import("./MobileApp.tsx");
-    createRoot(rootElement).render(<MobileApp />);
-    return;
-  }
-
   try {
-    console.log("Loading full app for desktop...");
+    console.log("Loading responsive app...");
     const { default: App } = await import("./App.tsx");
     createRoot(rootElement).render(<App />);
   } catch (error) {
-    console.error("Failed to load full app, using mobile fallback:", error);
-    const { default: MobileApp } = await import("./MobileApp.tsx");
-    createRoot(rootElement).render(<MobileApp />);
+    console.error("Failed to load app:", error);
+    // Simple fallback
+    rootElement.innerHTML = '<div style="padding: 2rem; text-align: center; font-family: Inter, sans-serif;"><h1>VMC Media</h1><p>Loading...</p></div>';
   }
 };
 
