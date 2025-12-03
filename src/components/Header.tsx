@@ -43,7 +43,7 @@ const Header = () => {
     { name: "About Company", href: "/pages/about", icon: Briefcase },
     { name: "Our Team", href: "/pages/team", icon: Users },
     { name: "Careers / Join Us", href: "/pages/careers", icon: Award },
-    { name: "Pricing Plans", href: "/pages/pricing", icon: DollarSign },
+    // { name: "Pricing Plans", href: "/pages/pricing", icon: DollarSign },
     { name: "Testimonials", href: "/pages/testimonials", icon: MessageSquare },
     { name: "FAQ", href: "/pages/faq", icon: HelpCircle },
     { name: "Terms & Conditions", href: "/pages/terms", icon: ScrollText },
