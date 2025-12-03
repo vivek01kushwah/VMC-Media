@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,38 +19,45 @@ import NotFound from "./pages/NotFound";
 import Consultation from "./pages/Consultation";
 import CaseStudiesPage from "./pages/CaseStudies";
 
-// Service Pages
-import SEOService from "./pages/services/SEO";
-import SMMService from "./pages/services/SMM";
-import GoogleAdsService from "./pages/services/GoogleAds";
-import WebDevelopmentService from "./pages/services/WebDevelopment";
-import BrandingService from "./pages/services/Branding";
-import LeadGenerationService from "./pages/services/LeadGeneration";
+// Lazy load service pages to reduce bundle size
+const SEOService = React.lazy(() => import("./pages/services/SEO"));
+const SMMService = React.lazy(() => import("./pages/services/SMM"));
+const GoogleAdsService = React.lazy(() => import("./pages/services/GoogleAds"));
+const WebDevelopmentService = React.lazy(() => import("./pages/services/WebDevelopment"));
+const BrandingService = React.lazy(() => import("./pages/services/Branding"));
+const LeadGenerationService = React.lazy(() => import("./pages/services/LeadGeneration"));
 
-// Branding Sub-Services
-import LogoDesign from "./pages/services/branding/LogoDesign";
-import BrandIdentity from "./pages/services/branding/BrandIdentity";
-import CorporateDesign from "./pages/services/branding/CorporateDesign";
+// Branding Sub-Services - Lazy loaded
+const LogoDesign = React.lazy(() => import("./pages/services/branding/LogoDesign"));
+const BrandIdentity = React.lazy(() => import("./pages/services/branding/BrandIdentity"));
+const CorporateDesign = React.lazy(() => import("./pages/services/branding/CorporateDesign"));
 
-// Additional Services
-import EmailMarketing from "./pages/services/EmailMarketing";
-import CRO from "./pages/services/CRO";
-import EcommerceMarketing from "./pages/services/EcommerceMarketing";
-import LocalSEO from "./pages/services/LocalSEO";
-import InfluencerMarketing from "./pages/services/InfluencerMarketing";
-import ORM from "./pages/services/ORM";
+// Additional Services - Lazy loaded
+const EmailMarketing = React.lazy(() => import("./pages/services/EmailMarketing"));
+const CRO = React.lazy(() => import("./pages/services/CRO"));
+const EcommerceMarketing = React.lazy(() => import("./pages/services/EcommerceMarketing"));
+const LocalSEO = React.lazy(() => import("./pages/services/LocalSEO"));
+const InfluencerMarketing = React.lazy(() => import("./pages/services/InfluencerMarketing"));
+const ORM = React.lazy(() => import("./pages/services/ORM"));
 
-// Portfolio Pages
-import CaseStudies from "./pages/portfolio/CaseStudies";
+// Portfolio Pages - Lazy loaded
+const CaseStudies = React.lazy(() => import("./pages/portfolio/CaseStudies"));
 
-// Info Pages
-import About from "./pages/info/About";
-import Team from "./pages/info/Team";
-import Careers from "./pages/info/Careers";
-import Pricing from "./pages/info/Pricing";
-import FAQ from "./pages/info/FAQ";
+// Info Pages - Lazy loaded
+const AboutPage = React.lazy(() => import("./pages/info/About"));
+const Team = React.lazy(() => import("./pages/info/Team"));
+const Careers = React.lazy(() => import("./pages/info/Careers"));
+const Pricing = React.lazy(() => import("./pages/info/Pricing"));
+const FAQ = React.lazy(() => import("./pages/info/FAQ"));
 
 const queryClient = new QueryClient();
+
+// Loading component for lazy loaded routes
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+);
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -57,7 +65,8 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <PageTransition key={location.pathname}>
-        <Routes location={location}>
+        <Suspense fallback={<PageLoader />}>
+          <Routes location={location}>
               <Route path="/" element={<Index />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogDetail />} />
@@ -96,7 +105,7 @@ const AnimatedRoutes = () => {
               <Route path="/portfolio/campaigns" element={<CaseStudies />} />
               
               {/* Info/Pages Routes */}
-              <Route path="/pages/about" element={<About />} />
+              <Route path="/pages/about" element={<AboutPage />} />
               <Route path="/pages/team" element={<Team />} />
               <Route path="/pages/careers" element={<Careers />} />
               <Route path="/pages/pricing" element={<Pricing />} />
@@ -108,6 +117,7 @@ const AnimatedRoutes = () => {
               {/* Catch-all route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+          </Suspense>
           </PageTransition>
         </AnimatePresence>
       );
