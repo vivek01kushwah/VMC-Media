@@ -32,6 +32,9 @@ const GetStartedModal = ({ isOpen, onClose }: GetStartedModalProps) => {
       if (e.key === "Escape") onClose();
     };
 
+    // Check if window exists (client-side only)
+    if (typeof window === 'undefined') return;
+    
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth || 0;
@@ -42,7 +45,6 @@ const GetStartedModal = ({ isOpen, onClose }: GetStartedModalProps) => {
     }
 
     return () => {
-      if (typeof window === "undefined") return;
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
       document.body.style.paddingRight = "";
